@@ -43,7 +43,7 @@ Add-Content -Path $PROFILE -Value "Import-Module WhoAteMyRAM"
 
 ### `ListMemoryUsage`
 
-Print or export memory usage statistics.
+_Print or export memory usage statistics._
 
 Parameters:
 
