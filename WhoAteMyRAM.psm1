@@ -3,22 +3,22 @@ function ListMemoryUsage {
     .SYNOPSIS
         List memory used by process.
 
-    .PARAMETER Unit
-        Unit of memory size.
-
     .PARAMETER Name
         Filter for process name.
+
+    .PARAMETER Unit
+        Unit of memory size.
 
     .PARAMETER Export
         Export to a csv file.
     #>
     [CmdletBinding()]
     param (
+        [Parameter(Mandatory = $false, Position = 2)]
+        [string] $Name,
         [Parameter(Mandatory = $false, Position = 0)]
         [string] $Unit = "mb",
         [Parameter(Mandatory = $false, Position = 1)]
-        [string] $Name,
-        [Parameter(Mandatory = $false, Position = 2)]
         [string] $Export
     )
 
