@@ -3,7 +3,7 @@ A PowerShell module for memory usage statistics.
 
 ## Installation
 
-#### Step 1. Go to `Modules` directory in PowerShell path
+### Step 1. Go to `Modules` directory in PowerShell path
 
 Run following command to check path
 
@@ -17,7 +17,7 @@ It is recommended to use defaule `$PROFILE` directory, you need to create one if
 $UsePath = (Split-Path $PROFILE | Join-Path -ChildPath Modules); if(!(Test-Path $UsePath)) {New-Item $UsePath -Type Directory -Force | Out-Null}; Set-Location $UsePath
 ```
 
-#### Step 2. Clone this repository
+### Step 2. Clone this repository
 
 Git command is available with [git for windows](https://gitforwindows.org/), or just use [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
@@ -25,7 +25,7 @@ Git command is available with [git for windows](https://gitforwindows.org/), or 
 git clone https://github.com/AkariiinMKII/WhoAteMyRAM
 ```
 
-**Step 3.** Set as Import-Module
+### Step 3. Set as Import-Module
 
 Ensure your PowerShell profile
 
