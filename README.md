@@ -43,7 +43,7 @@ Add-Content -Path $PROFILE -Value "Import-Module WhoAteMyRAM"
 
 ### `ListMemoryUsage`
 
-_Print or export memory usage statistics._
+Print or export memory usage statistics.
 
 Parameters:
 
@@ -60,13 +60,14 @@ _Unit of memory size._
 _Filter for process name._
 
 - Not mandatory
+- Do not input executable file extension
 
 #### `-Export <FileName>`
 
 _Export to a csv file._
 
 - Not mandatory
-- Only support csv in this version
+- Only support csv in current version
 - File extension can be omitted
 
 Example:
