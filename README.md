@@ -43,13 +43,13 @@ Add-Content -Path $PROFILE -Value "Import-Module WhoAteMyRAM"
 
 ### `ListMemoryUsage`
 
-Print or export memory usage statistics.
+_Print or export memory usage statistics._
 
 Parameters:
 
 #### `-Unit <Unit>`
 
-Unit of memory size.
+_Unit of memory size._
 
 - Not mandatory
 - Accept `KB`, `MB` and `GB`
@@ -57,13 +57,13 @@ Unit of memory size.
 
 #### `-Name`
 
-Filter for process name.
+_Filter for process name._
 
 - Not mandatory
 
 #### `-Export <FileName>`
 
-Export to a csv file
+_Export to a csv file._
 
 - Not mandatory
 - Only support csv in this version
@@ -76,7 +76,7 @@ ListMemoryUsage -Unit GB -Name chrome -Export aaa
 
 ### `WhoAteMyRAM` 
 
-Find out who is the RAM eater, just run it!
+_Find out who is the RAM eater, just run it!_
 
 Example:
 ```Powershell
