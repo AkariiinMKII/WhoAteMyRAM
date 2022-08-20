@@ -34,6 +34,9 @@ function ListMemoryUsage {
 
     $ProcessGroup = Get-Process | Group-Object -Property ProcessName
     if ($Name) {
+        if ($Name -match '\S+\.exe$') {
+            $Name = $Name -Replace '\.exe$', ''
+        }
         $ProcessGroup = $ProcessGroup | Where-Object {$_.Name -match "$Name"}
     }
 

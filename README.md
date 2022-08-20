@@ -55,7 +55,7 @@ _Unit of memory size._
 - Accept `KB`, `MB` and `GB`
 
 
-#### `-Name`
+#### `-Name <ProcessName>`
 
 _Filter for process name._
 
