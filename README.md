@@ -3,7 +3,7 @@ A Powershell module for memory usage statistics.
 
 ## Installation
 
-- ### by [Scoop](https://github.com/ScoopInstaller/Scoop)
+- ### Via [Scoop](https://github.com/ScoopInstaller/Scoop)
 
 ```Powershell
 # Add scoop bucket
@@ -13,7 +13,7 @@ scoop bucket add Scoop4kariiin https://github.com/AkariiinMKII/Scoop4kariiin
 scoop install WhoAteMyRAM
 ```
 
-- ### by git clone
+- ### Via git clone
 
 #### Step 1. Go to `Modules` directory in Powershell path
 
