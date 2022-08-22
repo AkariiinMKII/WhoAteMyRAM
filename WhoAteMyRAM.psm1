@@ -76,5 +76,3 @@ function WhoAteMyRAM {
     }
     Write-Host "`nIt's $Eater, who ate $MaxRAMEat GB of RAM!`n"
 }
-
-Export-ModuleMember -Function ListMemoryUsage, WhoAteMyRAM
