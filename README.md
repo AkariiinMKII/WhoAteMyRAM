@@ -15,39 +15,17 @@ scoop install WhoAteMyRAM
 
 - ### Via git clone
 
-#### Step 1. Go to `Modules` directory in Powershell path
+Notice that you need to install [git for windows](https://gitforwindows.org/) in advance.
 
-Run following command to check path
-
-```Powershell
-$env:PSModulePath -Split ";"
-```
-
-It is recommended to use defaule `$PROFILE` directory, you need to create one if not exists
-
-```Powershell
+```PowerShell
+# Go to modules folder
 $UsePath = (Split-Path $PROFILE | Join-Path -ChildPath Modules); if(!(Test-Path $UsePath)) {New-Item $UsePath -Type Directory -Force | Out-Null}; Set-Location $UsePath
-```
 
-#### Step 2. Clone this repository
-
-Git command is available with [git for windows](https://gitforwindows.org/), or just use [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
-
-```bash
+# Clone this repository
 git clone https://github.com/AkariiinMKII/WhoAteMyRAM
-```
 
-#### Step 3. Set as Import-Module
-
-Ensure your Powershell profile
-
-```Powershell
+# Modify PS profile to enable auto-import
 if (!(Test-Path $PROFILE)) {New-Item $PROFILE -Type File -Force | Out-Null}
-```
-
-Append Import-Module config to `$PROFILE`
-
-```Powershell
 Add-Content -Path $PROFILE -Value "Import-Module WhoAteMyRAM"
 ```
 
