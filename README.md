@@ -1,5 +1,5 @@
 # WhoAteMyRAM
-A Powershell module for memory usage statistics.
+A command-line tool for memory usage statistics.
 
 ## Installation
 
@@ -37,24 +37,31 @@ _Print or export memory usage statistics._
 
 Parameters:
 
-#### `-Unit <Unit>`
-
-_Unit of memory size._
-
-- Not mandatory
-- Accept `KB`, `MB` and `GB`
-
-
 #### `-Name <ProcessName>`
 
-_Filter for process name._
+_A filter for process name._
 
 - Not mandatory
-- Do not input executable file extension
+- Executable file extension can be omitted
+
+#### `-Unit <Unit>`
+
+_Specify the unit of memory size._
+
+- Not mandatory
+- Accept `KB`, `MB`, `GB` and `TB`
+
+#### `-Accuracy <Number>`
+
+_Specify decimal places to show._
+
+- Not mandatory
+- Accept integers from `0` to `15`
+
 
 #### `-Export <FileName>`
 
-_Export to a csv file._
+_Export results to a csv file._
 
 - Not mandatory
 - Only support csv in current version
@@ -62,7 +69,7 @@ _Export to a csv file._
 
 Example:
 ```Powershell
-ListMemoryUsage -Unit GB -Name chrome -Export aaa
+ListMemoryUsage -Name chrome -Unit GB -Accuracy 2 -Export abc
 ```
 
 ### `WhoAteMyRAM` 

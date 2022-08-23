@@ -1,52 +1,68 @@
 function ListMemoryUsage {
     <#
     .SYNOPSIS
-        List memory used by process.
-
-    .PARAMETER Unit
-        Unit of memory size.
+        Print or export memory usage statistics.
 
     .PARAMETER Name
-        Filter for process name.
+        A filter for process name.
+
+    .PARAMETER Unit
+        Specify the unit of memory size.
+
+    .PARAMETER Accuracy
+        Specify decimal places to show.
 
     .PARAMETER Export
-        Export to a csv file.
+        Export results to a csv file.
     #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false, Position = 0)]
-        [string] $Unit = "mb",
-        [Parameter(Mandatory = $false, Position = 1)]
         [string] $Name,
+        [Parameter(Mandatory = $false, Position = 1)]
+        [string] $Unit = "mb",
         [Parameter(Mandatory = $false, Position = 2)]
+        [int32] $Accuracy,
+        [Parameter(Mandatory = $false, Position = 3)]
         [string] $Export
     )
 
     $Unit = $Unit.ToUpper()
-    if (($Unit -eq "KB") -or ($Unit -eq "MB")) {
-        $DPlace = 0
-    } elseif ($Unit -eq "GB") {
-        $DPlace = 2
-    } else {
-        Write-Host "Error: Invalid unit, please use KB, MB or GB." -ForegroundColor Red
+    $SupportedUnit = @("KB", "MB", "GB", "TB")
+    if ($SupportedUnit -notcontains $Unit) {
+        $SupportedUnittoString = $SupportedUnit -join ", "
+        Write-Host "`nError: Invalid unit, please use $SupportedUnittoString.`n" -ForegroundColor Red
         Return
     }
 
-    $ProcessGroup = Get-Process | Group-Object -Property ProcessName
+    if ($Accuracy) {
+        if (($Accuracy -lt 0) -or ($Accuracy -gt 15)){
+            Write-Host "`nError: Only support accuracy from 0 to 15.`n" -ForegroundColor Red
+            Return
+        }
+    }
+    else {
+        switch ($Unit) {
+            {($Unit -eq "KB") -or ($Unit -eq "MB")} {$Accuracy = 0; Break}
+            {($Unit -eq "GB") -or ($Unit -eq "TB")} {$Accuracy = 2; Break}
+        }
+    }
+
+    $ProcessList = Get-Process | Group-Object -Property ProcessName
     if ($Name) {
         if ($Name -match '\S+\.exe$') {
             $Name = $Name -Replace '\.exe$', ''
         }
-        $ProcessGroup = $ProcessGroup | Where-Object {$_.Name -match "$Name"}
+        $ProcessList = $ProcessList | Where-Object {$_.Name -match "$Name"}
     }
 
-    $MemoryUsage = foreach ($Process in $ProcessGroup) {
-        $PUse = [math]::Round(($Process.Group | Measure-Object WorkingSet -Sum).Sum / "1$Unit",$DPlace)
-        $PInfo = New-Object psobject
-        $PInfo | Add-Member -MemberType NoteProperty -Name "Process Name" -Value $Process.Name
-        $PInfo | Add-Member -MemberType NoteProperty -Name "Count" -Value $Process.Count
-        $PInfo | Add-Member -MemberType NoteProperty -Name "Memory Usage`($Unit`)" -Value $PUse
-        $PInfo
+    $MemoryUsage = foreach ($Process in $ProcessList) {
+        $ProcUse = [math]::Round(($Process.Group | Measure-Object WorkingSet -Sum).Sum / "1$Unit",$Accuracy)
+        $ProcInfo = New-Object psobject
+        $ProcInfo | Add-Member -MemberType NoteProperty -Name "Process Name" -Value $Process.Name
+        $ProcInfo | Add-Member -MemberType NoteProperty -Name "Count" -Value $Process.Count
+        $ProcInfo | Add-Member -MemberType NoteProperty -Name "Memory Usage`($Unit`)" -Value $ProcUse
+        $ProcInfo
     }
     
     if ($Export) {
@@ -54,7 +70,8 @@ function ListMemoryUsage {
             $Export = $Export + ".csv"
         }
         $MemoryUsage | Export-Csv -Path "$Export" -Delimiter "," -NoTypeInformation
-    } else {
+    } 
+    else {
         $MemoryUsage
     }
 }
@@ -65,14 +82,15 @@ function WhoAteMyRAM {
         Find the RAM eater.
     #>
 
-    $ProcessGroup = Get-Process | Group-Object -Property ProcessName
     $MaxRAMEat = 0
-    foreach ($Process in $ProcessGroup) {
-        $PUse = [math]::Round(($Process.Group | Measure-Object WorkingSet -Sum).Sum / "1GB",2)
-        if ($PUse -gt $MaxRAMEat) {
-            $MaxRAMEat = $PUse
-            $Eater = $Process.Name
+    $ListMemoryUsage = ListMemoryUsage -Unit GB -Accuracy 2
+    $ListMemoryUsage | ForEach-Object {
+        $ProcUse = $_.'Memory Usage(GB)'
+        if ($ProcUse -gt $MaxRAMEat) {
+            $MaxRAMEat = $ProcUse
+            $RAMEater = $_.'Process Name'
         }
     }
-    Write-Host "`nIt's $Eater, who ate $MaxRAMEat GB of RAM!`n"
+
+    Write-Host "`nIt's $RAMEater, who ate $MaxRAMEat GB of RAM!`n"
 }
