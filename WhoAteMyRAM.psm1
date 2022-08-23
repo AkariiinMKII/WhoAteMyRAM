@@ -43,8 +43,8 @@ function ListMemoryUsage {
     }
     else {
         switch ($Unit) {
-            {($Unit -eq "KB") -or ($Unit -eq "MB")} {$Accuracy = 0; Break}
-            {($Unit -eq "GB") -or ($Unit -eq "TB")} {$Accuracy = 2; Break}
+            {($_ -eq "KB") -or ($_ -eq "MB")} {$Accuracy = 0; Break}
+            {($_ -eq "GB") -or ($_ -eq "TB")} {$Accuracy = 2; Break}
         }
     }
 
