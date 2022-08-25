@@ -4,13 +4,16 @@ function ListMemoryUsage {
         Print or export memory usage statistics.
 
     .PARAMETER Name
-        A filter for process name.
+        A filter for processes to show.
 
     .PARAMETER Unit
         Specify the unit of memory size.
 
     .PARAMETER Accuracy
         Specify decimal places to show.
+
+    .PARAMETER Sort
+        Sort processes by memory usage.
 
     .PARAMETER Export
         Export results to a csv file.
@@ -20,10 +23,12 @@ function ListMemoryUsage {
         [Parameter(Mandatory = $false, Position = 0)]
         [string] $Name,
         [Parameter(Mandatory = $false, Position = 1)]
-        [string] $Unit = "mb",
+        [string] $Unit = "MB",
         [Parameter(Mandatory = $false, Position = 2)]
         [int32] $Accuracy,
         [Parameter(Mandatory = $false, Position = 3)]
+        [string] $Sort,
+        [Parameter(Mandatory = $false, Position = 4)]
         [string] $Export
     )
 
@@ -42,9 +47,11 @@ function ListMemoryUsage {
         }
     }
     else {
-        switch ($Unit) {
-            {($_ -eq "KB") -or ($_ -eq "MB")} {$Accuracy = 0; Break}
-            {($_ -eq "GB") -or ($_ -eq "TB")} {$Accuracy = 2; Break}
+        $Accuracy = switch ($Unit) {
+            "KB" {0; Break}
+            "MB" {0; Break}
+            "GB" {2; Break}
+            "TB" {2; Break}
         }
     }
 
@@ -65,6 +72,23 @@ function ListMemoryUsage {
         $ProcInfo
     }
     
+    if ($Sort) {
+        $SupportedSort = @("+", "-", "Ascending", "Descending")
+        if ($SupportedSort -notcontains $Sort) {
+            $SupportedSorttoString = $SupportedSort -join ", "
+            Write-Host "`nError: Invalid sort, please use $SupportedSorttoString.`n" -ForegroundColor Red
+            Return
+        }
+        $MemoryUsage = switch ($Sort) {
+            {@("+", "Ascending") -contains $_} {
+                $MemoryUsage | Sort-Object -Property "Memory Usage(*)"
+            }
+            {@("-", "Descending") -contains $_} {
+                $MemoryUsage | Sort-Object -Property "Memory Usage(*)" -Descending
+            }
+        }
+    }
+
     if ($Export) {
         if (-not($Export -match '\S+\.csv$')) {
             $Export = $Export + ".csv"
@@ -82,15 +106,9 @@ function WhoAteMyRAM {
         Find the RAM eater.
     #>
 
-    $MaxRAMEat = 0
-    $ListMemoryUsage = ListMemoryUsage -Unit GB -Accuracy 2
-    $ListMemoryUsage | ForEach-Object {
-        $ProcUse = $_.'Memory Usage(GB)'
-        if ($ProcUse -gt $MaxRAMEat) {
-            $MaxRAMEat = $ProcUse
-            $RAMEater = $_.'Process Name'
-        }
-    }
+    $RAMEaterInfo = (ListMemoryUsage -Unit GB -Sort Descending)[0]
+    $RAMEater = $RAMEaterInfo.'Process Name'
+    $RAMAte = $RAMEaterInfo.'Memory Usage(GB)'
 
-    Write-Host "`nIt's $RAMEater, who ate $MaxRAMEat GB of RAM!`n"
+    Write-Host "`nIt's $RAMEater, who ate $RAMAte GB of RAM!`n"
 }

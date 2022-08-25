@@ -35,48 +35,27 @@ Add-Content -Path $PROFILE -Value "Import-Module WhoAteMyRAM"
 
 _Print or export memory usage statistics._
 
-Parameters:
+#### Parameters:
 
-#### `-Name <ProcessName>`
+|Parameter|Description|Mandatory|Acceptable Value|
+|----|----|:----:|----|
+|`-Name`|A filter for processes to show, file extension can be omitted|x|Any string|
+|`-Unit`|Specify the unit of memory size|x|`KB`, `MB`, `GB`, `TB`|
+|`-Accuracy`|Specify decimal places to show|x|Integers from `0` to `15`|
+|`-Sort`|Sort processes by memory usage|x|`+`, `-`, `Ascending`, `Descending`|
+|`-Export`|Export results to a csv file, file extension can be omitted|x|Any string|
 
-_A filter for process name._
-
-- Not mandatory
-- Executable file extension can be omitted
-
-#### `-Unit <Unit>`
-
-_Specify the unit of memory size._
-
-- Not mandatory
-- Accept `KB`, `MB`, `GB` and `TB`
-
-#### `-Accuracy <Number>`
-
-_Specify decimal places to show._
-
-- Not mandatory
-- Accept integers from `0` to `15`
-
-
-#### `-Export <FileName>`
-
-_Export results to a csv file._
-
-- Not mandatory
-- Only support csv in current version
-- File extension can be omitted
-
-Example:
+#### Example:
 ```Powershell
-ListMemoryUsage -Name chrome -Unit GB -Accuracy 2 -Export abc
+ListMemoryUsage -Name chrome -Unit GB -Accuracy 2 -Sort + -Export abc
 ```
 
 ### `WhoAteMyRAM` 
 
 _Find out who is the RAM eater, just run it!_
 
-Example:
+#### Example:
+
 ```Powershell
 WhoAteMyRAM
 
