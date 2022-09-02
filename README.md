@@ -1,4 +1,5 @@
 # WhoAteMyRAM
+
 A command-line tool for memory usage statistics.
 
 ## Installation
@@ -35,26 +36,27 @@ Add-Content -Path $PROFILE -Value "Import-Module WhoAteMyRAM"
 
 _Print or export memory usage statistics._
 
-#### Parameters:
+|Parameters|Type|Mandatory|Descriptions|
+|----|:----:|:----:|----|
+|`Name`|String|&cross;|A filter for processes to show, file extension can be omitted.|
+|`Unit`|String|&cross;|Specify the unit of memory size, support `KB`, `MB`, `GB`, `TB`.|
+|`Accuracy`|Int32|&cross;|Specify decimal places to show, support integers from `0` to `15`.|
+|`Sort`|String|&cross;|Sort processes by memory usage, support `+`, `-`, `Ascending`, `Descending`.|
+|`Export`|String|&cross;|Export results to csv file, file extension can be omitted.|
 
-|Parameter|Description|Mandatory|Acceptable Value|
-|----|----|:----:|----|
-|`-Name`|A filter for processes to show, file extension can be omitted|x|Any string|
-|`-Unit`|Specify the unit of memory size|x|`KB`, `MB`, `GB`, `TB`|
-|`-Accuracy`|Specify decimal places to show|x|Integers from `0` to `15`|
-|`-Sort`|Sort processes by memory usage|x|`+`, `-`, `Ascending`, `Descending`|
-|`-Export`|Export results to a csv file, file extension can be omitted|x|Any string|
+#### Example
 
-#### Example:
 ```Powershell
 ListMemoryUsage -Name chrome -Unit GB -Accuracy 2 -Sort + -Export abc
 ```
 
-### `WhoAteMyRAM` 
+----
+
+### `WhoAteMyRAM`
 
 _Find out who is the RAM eater, just run it!_
 
-#### Example:
+#### Example
 
 ```Powershell
 WhoAteMyRAM
