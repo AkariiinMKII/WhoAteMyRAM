@@ -15,6 +15,9 @@ function ListMemoryUsage {
     .PARAMETER Sort
         Sort processes by memory usage.
 
+    .PARAMETER NoSum
+        Sum info won't be generated with this parameter.
+
     .PARAMETER Export
         Export results to a csv file.
     #>
@@ -29,10 +32,20 @@ function ListMemoryUsage {
         [Parameter(Mandatory = $false, Position = 3)]
         [string] $Sort,
         [Parameter(Mandatory = $false, Position = 4)]
+        [switch] $NoSum,
+        [Parameter(Mandatory = $false, Position = 5)]
         [string] $Export
     )
 
     $Unit = $Unit.ToUpper()
+
+    switch ($Unit) {
+        "K" {$Unit = "KB"; Break}
+        "M" {$Unit = "MB"; Break}
+        "G" {$Unit = "GB"; Break}
+        "T" {$Unit = "TB"; Break}
+    }
+
     $SupportedUnit = @("KB", "MB", "GB", "TB")
     if ($SupportedUnit -notcontains $Unit) {
         $SupportedUnittoString = $SupportedUnit -join ", "
@@ -89,6 +102,26 @@ function ListMemoryUsage {
         }
     }
 
+    if (-not($NoSum)) {
+        $DivideLine = New-Object PsObject -Property @{
+            "Process Name" = "------------";
+            "Count" = "-----";
+            "Memory Usage`($Unit`)" = "----------------"
+        }
+
+        $CountSum = ($MemoryUsage | Measure-Object Count -Sum).Sum
+        $MemoryUsageSum = ($MemoryUsage | Measure-Object "Memory Usage*" -Sum).Sum
+
+        $SumInfo = New-Object PsObject -Property @{
+            "Process Name" = "Sum";
+            "Count" = $CountSum;
+            "Memory Usage`($Unit`)" = $MemoryUsageSum
+        }
+
+        $MemoryUsage += $DivideLine
+        $MemoryUsage += $SumInfo
+    }
+
     if ($Export) {
         if (-not($Export -match '\S+\.csv$')) {
             $Export = $Export + ".csv"
@@ -106,7 +139,7 @@ function WhoAteMyRAM {
         Find the RAM eater.
     #>
 
-    $RAMEaterInfo = (ListMemoryUsage -Unit GB -Sort Descending)[0]
+    $RAMEaterInfo = (ListMemoryUsage -Unit GB -Sort Descending -NoSum)[0]
     $RAMEater = $RAMEaterInfo.'Process Name'
     $RAMAte = $RAMEaterInfo.'Memory Usage(GB)'
 

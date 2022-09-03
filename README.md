@@ -42,6 +42,7 @@ _Print or export memory usage statistics._
 |`Unit`|String|&cross;|Specify the unit of memory size, support `KB`, `MB`, `GB`, `TB`.|
 |`Accuracy`|Int32|&cross;|Specify decimal places to show, support integers from `0` to `15`.|
 |`Sort`|String|&cross;|Sort processes by memory usage, support `+`, `-`, `Ascending`, `Descending`.|
+|`NoSum`|switch|&cross;|Sum info won't be generated with this parameter.|
 |`Export`|String|&cross;|Export results to csv file, file extension can be omitted.|
 
 #### Example
