@@ -87,6 +87,11 @@ function ListMemoryUsage {
         $ProcInfo
     }
 
+    if ($MemoryUsage.Count -eq 0) {
+        Write-Host "`nError: Cannot find process `"$Name`".`n" -ForegroundColor Red
+        Return
+    }
+
     if ($Sort) {
         $SupportedSort = @("+", "-", "Ascending", "Descending")
         if ($SupportedSort -notcontains $Sort) {
