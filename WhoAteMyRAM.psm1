@@ -116,7 +116,7 @@ function ListMemoryUsage {
         $DivideLine | Add-Member -MemberType NoteProperty -Name "Memory Usage`($Unit`)" -Value "----------------"
 
         $CountSum = ($MemoryUsage | Measure-Object Count -Sum).Sum
-        $MemoryUsageSum = ($MemoryUsage | Measure-Object "Memory Usage*" -Sum).Sum
+        $MemoryUsageSum = [math]::Round(($MemoryUsage | Measure-Object "Memory Usage*" -Sum).Sum,$Accuracy)
 
         $SumInfo = New-Object PsObject
         $SumInfo | Add-Member -MemberType NoteProperty -Name "Process Name" -Value "Sum"
