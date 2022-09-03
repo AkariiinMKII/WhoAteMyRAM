@@ -78,13 +78,13 @@ function ListMemoryUsage {
 
     $MemoryUsage = foreach ($Process in $ProcessList) {
         $ProcUse = [math]::Round(($Process.Group | Measure-Object WorkingSet -Sum).Sum / "1$Unit",$Accuracy)
-        $ProcInfo = New-Object psobject
+        $ProcInfo = New-Object PsObject
         $ProcInfo | Add-Member -MemberType NoteProperty -Name "Process Name" -Value $Process.Name
         $ProcInfo | Add-Member -MemberType NoteProperty -Name "Count" -Value $Process.Count
         $ProcInfo | Add-Member -MemberType NoteProperty -Name "Memory Usage`($Unit`)" -Value $ProcUse
         $ProcInfo
     }
-    
+
     if ($Sort) {
         $SupportedSort = @("+", "-", "Ascending", "Descending")
         if ($SupportedSort -notcontains $Sort) {
@@ -103,20 +103,18 @@ function ListMemoryUsage {
     }
 
     if (-not($NoSum)) {
-        $DivideLine = New-Object PsObject -Property @{
-            "Process Name" = "------------";
-            "Count" = "-----";
-            "Memory Usage`($Unit`)" = "----------------"
-        }
+        $DivideLine = New-Object PsObject
+        $DivideLine | Add-Member -MemberType NoteProperty -Name "Process Name" -Value "------------"
+        $DivideLine | Add-Member -MemberType NoteProperty -Name "Count" -Value "-----"
+        $DivideLine | Add-Member -MemberType NoteProperty -Name "Memory Usage`($Unit`)" -Value "----------------"
 
         $CountSum = ($MemoryUsage | Measure-Object Count -Sum).Sum
         $MemoryUsageSum = ($MemoryUsage | Measure-Object "Memory Usage*" -Sum).Sum
 
-        $SumInfo = New-Object PsObject -Property @{
-            "Process Name" = "Sum";
-            "Count" = $CountSum;
-            "Memory Usage`($Unit`)" = $MemoryUsageSum
-        }
+        $SumInfo = New-Object PsObject
+        $SumInfo | Add-Member -MemberType NoteProperty -Name "Process Name" -Value "Sum"
+        $SumInfo | Add-Member -MemberType NoteProperty -Name "Count" -Value  $CountSum
+        $SumInfo | Add-Member -MemberType NoteProperty -Name "Memory Usage`($Unit`)" -Value $MemoryUsageSum
 
         $MemoryUsage += $DivideLine
         $MemoryUsage += $SumInfo
@@ -127,7 +125,7 @@ function ListMemoryUsage {
             $Export = $Export + ".csv"
         }
         $MemoryUsage | Export-Csv -Path "$Export" -Delimiter "," -NoTypeInformation
-    } 
+    }
     else {
         $MemoryUsage
     }
