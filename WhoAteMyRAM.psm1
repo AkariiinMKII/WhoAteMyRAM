@@ -76,7 +76,9 @@ function ListMemoryUsage {
         $ProcessList = $ProcessList | Where-Object {$_.Name -match "$Name"}
     }
 
-    $MemoryUsage = foreach ($Process in $ProcessList) {
+    $MemoryUsage = @()
+
+    $MemoryUsage += foreach ($Process in $ProcessList) {
         $ProcUse = [math]::Round(($Process.Group | Measure-Object WorkingSet -Sum).Sum / "1$Unit",$Accuracy)
         $ProcInfo = New-Object PsObject
         $ProcInfo | Add-Member -MemberType NoteProperty -Name "Process Name" -Value $Process.Name
