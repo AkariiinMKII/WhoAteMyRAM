@@ -53,7 +53,7 @@ function ListMemoryUsage {
         Return
     }
 
-    if ($Accuracy) {
+    if ($PSBoundParameters.ContainsKey('Accuracy')) {
         if (($Accuracy -lt 0) -or ($Accuracy -gt 15)){
             Write-Host "`nError: Only support accuracy from 0 to 15.`n" -ForegroundColor Red
             Return
