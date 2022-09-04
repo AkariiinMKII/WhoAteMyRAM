@@ -10,7 +10,7 @@ A command-line tool for memory usage statistics.
 # Add scoop bucket
 scoop bucket add Scoop4kariiin https://github.com/AkariiinMKII/Scoop4kariiin
 
-# Install 
+# Install
 scoop install WhoAteMyRAM
 ```
 
@@ -39,16 +39,17 @@ _Print or export memory usage statistics._
 |Parameters|Type|Mandatory|Descriptions|
 |----|:----:|:----:|----|
 |`Name`|String|&cross;|A filter for processes to show, file extension can be omitted.|
+|`Exactly`|switch|&cross;|Use this parameter to match process name exactly.|
 |`Unit`|String|&cross;|Specify the unit of memory size, support `KB`, `MB`, `GB`, `TB`.|
 |`Accuracy`|Int32|&cross;|Specify decimal places to show, support integers from `0` to `15`.|
 |`Sort`|String|&cross;|Sort processes by memory usage, support `+`, `-`, `Ascending`, `Descending`.|
 |`NoSum`|switch|&cross;|Sum info won't be generated with this parameter.|
 |`Export`|String|&cross;|Export results to csv file, file extension can be omitted.|
 
-#### Example
+- Example:
 
 ```Powershell
-ListMemoryUsage -Name chrome -Unit GB -Accuracy 2 -Sort + -Export abc
+ListMemoryUsage -Name chrome -Exactly -Unit GB -Accuracy 1 -Sort + -NoSum -Export Abc
 ```
 
 ----
@@ -57,7 +58,7 @@ ListMemoryUsage -Name chrome -Unit GB -Accuracy 2 -Sort + -Export abc
 
 _Find out who is the RAM eater, just run it!_
 
-#### Example
+- Example:
 
 ```Powershell
 WhoAteMyRAM

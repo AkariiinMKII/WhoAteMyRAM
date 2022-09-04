@@ -6,6 +6,9 @@ function ListMemoryUsage {
     .PARAMETER Name
         A filter for processes to show.
 
+    .PARAMETER Exactly
+        Match process name exactly.
+
     .PARAMETER Unit
         Specify the unit of memory size.
 
@@ -26,14 +29,16 @@ function ListMemoryUsage {
         [Parameter(Mandatory = $false, Position = 0)]
         [string] $Name,
         [Parameter(Mandatory = $false, Position = 1)]
-        [string] $Unit = "MB",
+        [switch] $Exactly,
         [Parameter(Mandatory = $false, Position = 2)]
-        [int32] $Accuracy,
+        [string] $Unit = "MB",
         [Parameter(Mandatory = $false, Position = 3)]
-        [string] $Sort,
+        [int32] $Accuracy,
         [Parameter(Mandatory = $false, Position = 4)]
-        [switch] $NoSum,
+        [string] $Sort,
         [Parameter(Mandatory = $false, Position = 5)]
+        [switch] $NoSum,
+        [Parameter(Mandatory = $false, Position = 6)]
         [string] $Export
     )
 
@@ -73,7 +78,13 @@ function ListMemoryUsage {
         if ($Name -match '\S+\.exe$') {
             $Name = $Name -Replace '\.exe$', ''
         }
-        $ProcessList = $ProcessList | Where-Object {$_.Name -match "$Name"}
+
+        if ($Exactly) {
+            $ProcessList = $ProcessList | Where-Object {$_.Name -eq "$Name"}
+        }
+        else {
+            $ProcessList = $ProcessList | Where-Object {$_.Name -match "$Name"}
+        }
     }
 
     $MemoryUsage = @()
@@ -88,7 +99,13 @@ function ListMemoryUsage {
     }
 
     if ($MemoryUsage.Count -eq 0) {
-        Write-Host "`nError: Cannot find process `"$Name`".`n" -ForegroundColor Red
+        if ($Exactly) {
+            Write-Host "`nError: Cannot find process matches `"$Name`" exactly.`n" -ForegroundColor Red
+        }
+        else {
+            Write-Host "`nError: Cannot find process matches `"$Name`".`n" -ForegroundColor Red
+        }
+
         Return
     }
 
