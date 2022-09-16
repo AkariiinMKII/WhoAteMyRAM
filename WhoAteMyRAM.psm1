@@ -57,6 +57,9 @@ function ListMemoryUsage {
         @{Parameter="    -NoSum"; Description="Sum info won't be generated with this parameter."}
         @{Parameter="    -Export <String>"; Description="Export results to csv file, file extension can be omitted."}
         @{Parameter="    -Help"; Description="Print help info."}
+        @{Parameter=""; Description=""}
+        @{Parameter="WhoAteMyRAM [<Parameters>]"; Description=""}
+        @{Parameter="    -Help"; Description="Print help info."}
     ) | ForEach-Object { New-Object PSObject | Add-Member -NotePropertyMembers $_ -PassThru }
 
     if ($Help) {
@@ -76,13 +79,15 @@ function ListMemoryUsage {
     if ($SupportedUnit -notcontains $Unit) {
         $SupportedUnittoString = $SupportedUnit -join ", "
         Write-Host "`nError: Invalid unit, please use $SupportedUnittoString." -ForegroundColor Red
-        Return $HelpInfo | Format-Table -HideTableHeaders
+        Write-Host "`nRun 'ListMemoryUsage -Help' for more help info.`n"
+        Return
     }
 
     if ($PSBoundParameters.ContainsKey('Accuracy')) {
         if (($Accuracy -lt 0) -or ($Accuracy -gt 15)){
             Write-Host "`nError: Only support accuracy from 0 to 15." -ForegroundColor Red
-            Return $HelpInfo | Format-Table -HideTableHeaders
+            Write-Host "`nRun 'ListMemoryUsage -Help' for more help info.`n"
+            Return
         }
     }
     else {
@@ -126,8 +131,8 @@ function ListMemoryUsage {
         else {
             Write-Host "`nError: Cannot find process matches `"$Name`"." -ForegroundColor Red
         }
-
-        Return $HelpInfo | Format-Table -HideTableHeaders
+        Write-Host "`nRun 'ListMemoryUsage -Help' for more help info.`n"
+        Return
     }
 
     if ($Sort) {
@@ -135,7 +140,8 @@ function ListMemoryUsage {
         if ($SupportedSort -notcontains $Sort) {
             $SupportedSorttoString = $SupportedSort -join ", "
             Write-Host "`nError: Invalid sort, please use $SupportedSorttoString." -ForegroundColor Red
-            Return $HelpInfo | Format-Table -HideTableHeaders
+            Write-Host "`nRun 'ListMemoryUsage -Help' for more help info.`n"
+            Return
         }
         $MemoryUsage = switch ($Sort) {
             {@("+", "Ascending") -contains $_} {
@@ -180,7 +186,34 @@ function WhoAteMyRAM {
     <#
     .SYNOPSIS
         Find the RAM eater.
+
+    .PARAMETER Help
+        Print help info.
     #>
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $false, Position = 0)]
+        [switch] $Help
+    )
+
+    $HelpInfo = @(
+        @{Parameter="ListMemoryUsage [<Parameters>]"; Description=""}
+        @{Parameter="    -Name <String>"; Description="A filter for processes to show, file extension can be omitted."}
+        @{Parameter="    -Exactly"; Description="Use this parameter to match process name exactly."}
+        @{Parameter="    -Unit <String>"; Description="Specify the unit of memory size, support KB, MB, GB, TB."}
+        @{Parameter="    -Accuracy <Int32>"; Description="Specify decimal places to show, support integers from 0 to 15."}
+        @{Parameter="    -Sort <String>"; Description="Sort processes by memory usage, support +, -, Ascending, Descending."}
+        @{Parameter="    -NoSum"; Description="Sum info won't be generated with this parameter."}
+        @{Parameter="    -Export <String>"; Description="Export results to csv file, file extension can be omitted."}
+        @{Parameter="    -Help"; Description="Print help info."}
+        @{Parameter=""; Description=""}
+        @{Parameter="WhoAteMyRAM [<Parameters>]"; Description=""}
+        @{Parameter="    -Help"; Description="Print help info."}
+    ) | ForEach-Object { New-Object PSObject | Add-Member -NotePropertyMembers $_ -PassThru }
+
+    if ($Help) {
+        Return $HelpInfo | Format-Table -HideTableHeaders
+    }
 
     $RAMEaterInfo = (ListMemoryUsage -Unit GB -Sort Descending -NoSum)[0]
     $RAMEater = $RAMEaterInfo.'Process Name'
