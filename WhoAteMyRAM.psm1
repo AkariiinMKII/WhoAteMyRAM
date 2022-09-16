@@ -57,7 +57,7 @@ function ListMemoryUsage {
         @{Parameter="    -NoSum"; Description="Sum info won't be generated with this parameter."}
         @{Parameter="    -Export <String>"; Description="Export results to csv file, file extension can be omitted."}
         @{Parameter="    -Help"; Description="Print help info."}
-    ) | ForEach-Object { New-Object object | Add-Member -NotePropertyMembers $_ -PassThru }
+    ) | ForEach-Object { New-Object PsObject | Add-Member -NotePropertyMembers $_ -PassThru }
 
     if ($Help) {
         Return $HelpInfo | Format-Table -HideTableHeaders
