@@ -57,7 +57,7 @@ function ListMemoryUsage {
         @{Parameter="    -NoSum"; Description="Sum info won't be generated with this parameter."}
         @{Parameter="    -Export <String>"; Description="Export results to csv file, file extension can be omitted."}
         @{Parameter="    -Help"; Description="Print help info."}
-    ) | ForEach-Object { New-Object PsObject | Add-Member -NotePropertyMembers $_ -PassThru }
+    ) | ForEach-Object { New-Object PSObject | Add-Member -NotePropertyMembers $_ -PassThru }
 
     if ($Help) {
         Return $HelpInfo | Format-Table -HideTableHeaders
@@ -112,7 +112,7 @@ function ListMemoryUsage {
 
     $MemoryUsage += foreach ($Process in $ProcessList) {
         $ProcUse = [math]::Round(($Process.Group | Measure-Object WorkingSet -Sum).Sum / "1$Unit",$Accuracy)
-        $ProcInfo = New-Object PsObject
+        $ProcInfo = New-Object PSObject
         $ProcInfo | Add-Member -MemberType NoteProperty -Name "Process Name" -Value $Process.Name
         $ProcInfo | Add-Member -MemberType NoteProperty -Name "Count" -Value $Process.Count
         $ProcInfo | Add-Member -MemberType NoteProperty -Name "Memory Usage`($Unit`)" -Value $ProcUse
@@ -148,7 +148,7 @@ function ListMemoryUsage {
     }
 
     if (-not($NoSum)) {
-        $DivideLine = New-Object PsObject
+        $DivideLine = New-Object PSObject
         $DivideLine | Add-Member -MemberType NoteProperty -Name "Process Name" -Value "------------"
         $DivideLine | Add-Member -MemberType NoteProperty -Name "Count" -Value "-----"
         $DivideLine | Add-Member -MemberType NoteProperty -Name "Memory Usage`($Unit`)" -Value "----------------"
@@ -156,7 +156,7 @@ function ListMemoryUsage {
         $CountSum = ($MemoryUsage | Measure-Object Count -Sum).Sum
         $MemoryUsageSum = [math]::Round(($MemoryUsage | Measure-Object "Memory Usage*" -Sum).Sum,$Accuracy)
 
-        $SumInfo = New-Object PsObject
+        $SumInfo = New-Object PSObject
         $SumInfo | Add-Member -MemberType NoteProperty -Name "Process Name" -Value "Sum"
         $SumInfo | Add-Member -MemberType NoteProperty -Name "Count" -Value  $CountSum
         $SumInfo | Add-Member -MemberType NoteProperty -Name "Memory Usage`($Unit`)" -Value $MemoryUsageSum
