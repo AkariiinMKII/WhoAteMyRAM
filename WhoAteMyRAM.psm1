@@ -23,6 +23,9 @@ function ListMemoryUsage {
 
     .PARAMETER Export
         Export results to a csv file.
+
+    .PARAMETER Help
+        Print help info.
     #>
     [CmdletBinding()]
     param (
@@ -39,8 +42,26 @@ function ListMemoryUsage {
         [Parameter(Mandatory = $false, Position = 5)]
         [switch] $NoSum,
         [Parameter(Mandatory = $false, Position = 6)]
-        [string] $Export
+        [string] $Export,
+        [Parameter(Mandatory = $false, Position = 7)]
+        [switch] $Help
     )
+
+    $HelpInfo = @(
+        @{Parameter="ListMemoryUsage [<Parameters>]"; Description=""}
+        @{Parameter="    -Name <String>"; Description="A filter for processes to show, file extension can be omitted."}
+        @{Parameter="    -Exactly"; Description="Use this parameter to match process name exactly."}
+        @{Parameter="    -Unit <String>"; Description="Specify the unit of memory size, support KB, MB, GB, TB."}
+        @{Parameter="    -Accuracy <Int32>"; Description="Specify decimal places to show, support integers from 0 to 15."}
+        @{Parameter="    -Sort <String>"; Description="Sort processes by memory usage, support +, -, Ascending, Descending."}
+        @{Parameter="    -NoSum"; Description="Sum info won't be generated with this parameter."}
+        @{Parameter="    -Export <String>"; Description="Export results to csv file, file extension can be omitted."}
+        @{Parameter="    -Help"; Description="Print help info."}
+    ) | ForEach-Object { New-Object object | Add-Member -NotePropertyMembers $_ -PassThru }
+
+    if ($Help) {
+        Return $HelpInfo | Format-Table -HideTableHeaders
+    }
 
     $Unit = $Unit.ToUpper()
 
@@ -54,14 +75,14 @@ function ListMemoryUsage {
     $SupportedUnit = @("KB", "MB", "GB", "TB")
     if ($SupportedUnit -notcontains $Unit) {
         $SupportedUnittoString = $SupportedUnit -join ", "
-        Write-Host "`nError: Invalid unit, please use $SupportedUnittoString.`n" -ForegroundColor Red
-        Return
+        Write-Host "`nError: Invalid unit, please use $SupportedUnittoString." -ForegroundColor Red
+        Return $HelpInfo | Format-Table -HideTableHeaders
     }
 
     if ($PSBoundParameters.ContainsKey('Accuracy')) {
         if (($Accuracy -lt 0) -or ($Accuracy -gt 15)){
-            Write-Host "`nError: Only support accuracy from 0 to 15.`n" -ForegroundColor Red
-            Return
+            Write-Host "`nError: Only support accuracy from 0 to 15." -ForegroundColor Red
+            Return $HelpInfo | Format-Table -HideTableHeaders
         }
     }
     else {
@@ -100,21 +121,21 @@ function ListMemoryUsage {
 
     if ($MemoryUsage.Count -eq 0) {
         if ($Exactly) {
-            Write-Host "`nError: Cannot find process matches `"$Name`" exactly.`n" -ForegroundColor Red
+            Write-Host "`nError: Cannot find process matches `"$Name`" exactly." -ForegroundColor Red
         }
         else {
-            Write-Host "`nError: Cannot find process matches `"$Name`".`n" -ForegroundColor Red
+            Write-Host "`nError: Cannot find process matches `"$Name`"." -ForegroundColor Red
         }
 
-        Return
+        Return $HelpInfo | Format-Table -HideTableHeaders
     }
 
     if ($Sort) {
         $SupportedSort = @("+", "-", "Ascending", "Descending")
         if ($SupportedSort -notcontains $Sort) {
             $SupportedSorttoString = $SupportedSort -join ", "
-            Write-Host "`nError: Invalid sort, please use $SupportedSorttoString.`n" -ForegroundColor Red
-            Return
+            Write-Host "`nError: Invalid sort, please use $SupportedSorttoString." -ForegroundColor Red
+            Return $HelpInfo | Format-Table -HideTableHeaders
         }
         $MemoryUsage = switch ($Sort) {
             {@("+", "Ascending") -contains $_} {

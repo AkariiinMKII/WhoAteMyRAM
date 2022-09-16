@@ -45,6 +45,7 @@ _Print or export memory usage statistics._
 |`Sort`|String|&cross;|Sort processes by memory usage, support `+`, `-`, `Ascending`, `Descending`.|
 |`NoSum`|switch|&cross;|Sum info won't be generated with this parameter.|
 |`Export`|String|&cross;|Export results to csv file, file extension can be omitted.|
+|`Help`|Switch|&cross;|Print help info.|
 
 - Example:
 
