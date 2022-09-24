@@ -12,7 +12,7 @@
     RootModule = 'WhoAteMyRAM.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.0.15'
+    ModuleVersion = '1.0.16'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -78,7 +78,7 @@
     VariablesToExport = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport = @()
+    AliasesToExport = @("LMU", "WAMR")
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()

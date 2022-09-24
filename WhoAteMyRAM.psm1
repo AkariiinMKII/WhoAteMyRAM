@@ -221,3 +221,6 @@ function WhoAteMyRAM {
 
     Write-Host "`nIt's $RAMEater, who ate $RAMAte GB of RAM!`n"
 }
+
+Set-Alias LMU ListMemoryUsage
+Set-Alias WAMR WhoAteMyRAM
