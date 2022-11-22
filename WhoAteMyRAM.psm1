@@ -60,6 +60,7 @@ function ListMemoryUsage {
         @{Parameter=""; Description=""}
         @{Parameter="WhoAteMyRAM [<Parameters>]"; Description=""}
         @{Parameter="    -Help"; Description="Print help info."}
+        @{Parameter="    -Version"; Description="Print version info."}
     ) | ForEach-Object { New-Object PSObject | Add-Member -NotePropertyMembers $_ -PassThru }
 
     if ($Help) {
@@ -189,11 +190,16 @@ function WhoAteMyRAM {
 
     .PARAMETER Help
         Print help info.
+
+    .PARAMETER Version
+        Print version info.
     #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false, Position = 0)]
-        [switch] $Help
+        [switch] $Help,
+        [Parameter(Mandatory = $false, Position = 1)]
+        [switch] $Version
     )
 
     $HelpInfo = @(
@@ -209,10 +215,16 @@ function WhoAteMyRAM {
         @{Parameter=""; Description=""}
         @{Parameter="WhoAteMyRAM [<Parameters>]"; Description=""}
         @{Parameter="    -Help"; Description="Print help info."}
+        @{Parameter="    -Version"; Description="Print version info."}
     ) | ForEach-Object { New-Object PSObject | Add-Member -NotePropertyMembers $_ -PassThru }
 
     if ($Help) {
         Return $HelpInfo | Format-Table -HideTableHeaders
+    }
+
+    if ($Version) {
+        $VersionInfo = (Get-Module -Name WhoAteMyRAM | Select-Object Version).Version
+        Return "WhoAteMyRAM $VersionInfo"
     }
 
     $RAMEaterInfo = (ListMemoryUsage -Unit GB -Sort Descending -NoSum)[0]

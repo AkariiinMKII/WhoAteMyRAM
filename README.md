@@ -59,6 +59,11 @@ ListMemoryUsage -Name chrome -Exactly -Unit GB -Accuracy 1 -Sort + -NoSum -Expor
 
 _Find out who is the RAM eater, just run it!_
 
+|Parameters|Type|Mandatory|Descriptions|
+|----|:----:|:----:|----|
+|`Help`|Switch|&cross;|Print help info.|
+|`Version`|Switch|&cross;|Print version info.|
+
 - Example:
 
 ```Powershell
