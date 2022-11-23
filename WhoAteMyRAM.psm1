@@ -48,7 +48,7 @@ function ListMemoryUsage {
     )
 
     $HelpInfo = @(
-        @{Parameter="ListMemoryUsage [<Parameters>]"; Description=""}
+        @{Parameter="ListMemoryUsage               "; Description="Print memory usage statistics."}
         @{Parameter="    -Name <String>"; Description="A filter for processes to show, file extension can be omitted."}
         @{Parameter="    -Exactly"; Description="Use this parameter to match process name exactly."}
         @{Parameter="    -Unit <String>"; Description="Specify the unit of memory size, support KB, MB, GB, TB."}
@@ -58,13 +58,13 @@ function ListMemoryUsage {
         @{Parameter="    -Export <String>"; Description="Export results to csv file, file extension can be omitted."}
         @{Parameter="    -Help"; Description="Print help info."}
         @{Parameter=""; Description=""}
-        @{Parameter="WhoAteMyRAM [<Parameters>]"; Description=""}
+        @{Parameter="WhoAteMyRAM                   "; Description="Find out who is the RAM eater, just run it!"}
         @{Parameter="    -Help"; Description="Print help info."}
         @{Parameter="    -Version"; Description="Print version info."}
-    ) | ForEach-Object { New-Object PSObject | Add-Member -NotePropertyMembers $_ -PassThru }
+    ) | ForEach-Object { New-Object PSObject | Add-Member -NotePropertyMembers $_ -PassThru } | Format-Table -HideTableHeaders
 
     if ($Help) {
-        Return $HelpInfo | Format-Table -HideTableHeaders
+        Return $HelpInfo
     }
 
     $Unit = $Unit.ToUpper()
@@ -202,24 +202,9 @@ function WhoAteMyRAM {
         [switch] $Version
     )
 
-    $HelpInfo = @(
-        @{Parameter="ListMemoryUsage [<Parameters>]"; Description=""}
-        @{Parameter="    -Name <String>"; Description="A filter for processes to show, file extension can be omitted."}
-        @{Parameter="    -Exactly"; Description="Use this parameter to match process name exactly."}
-        @{Parameter="    -Unit <String>"; Description="Specify the unit of memory size, support KB, MB, GB, TB."}
-        @{Parameter="    -Accuracy <Int32>"; Description="Specify decimal places to show, support integers from 0 to 15."}
-        @{Parameter="    -Sort <String>"; Description="Sort processes by memory usage, support +, -, Ascending, Descending."}
-        @{Parameter="    -NoSum"; Description="Sum info won't be generated with this parameter."}
-        @{Parameter="    -Export <String>"; Description="Export results to csv file, file extension can be omitted."}
-        @{Parameter="    -Help"; Description="Print help info."}
-        @{Parameter=""; Description=""}
-        @{Parameter="WhoAteMyRAM [<Parameters>]"; Description=""}
-        @{Parameter="    -Help"; Description="Print help info."}
-        @{Parameter="    -Version"; Description="Print version info."}
-    ) | ForEach-Object { New-Object PSObject | Add-Member -NotePropertyMembers $_ -PassThru }
-
     if ($Help) {
-        Return $HelpInfo | Format-Table -HideTableHeaders
+        $HelpInfo = ListMemoryUsage -Help
+        Return $HelpInfo
     }
 
     if ($Version) {
