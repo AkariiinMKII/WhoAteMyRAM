@@ -47,33 +47,37 @@ function ListMemoryUsage {
         [switch] $Help
     )
 
-    $HelpInfo = @(
-        @{Parameter="ListMemoryUsage               "; Description="Print memory usage statistics."}
-        @{Parameter="    -Name <String>"; Description="A filter for processes to show, file extension can be omitted."}
-        @{Parameter="    -Exactly"; Description="Use this parameter to match process name exactly."}
-        @{Parameter="    -Unit <String>"; Description="Specify the unit of memory size, support KB, MB, GB, TB."}
-        @{Parameter="    -Accuracy <Int32>"; Description="Specify decimal places to show, support integers from 0 to 15."}
-        @{Parameter="    -Sort <String>"; Description="Sort processes by memory usage, support +, -, Ascending, Descending."}
-        @{Parameter="    -NoSum"; Description="Sum info won't be generated with this parameter."}
-        @{Parameter="    -Export <String>"; Description="Export results to csv file, file extension can be omitted."}
-        @{Parameter="    -Help"; Description="Print help info."}
-        @{Parameter=""; Description=""}
-        @{Parameter="WhoAteMyRAM                   "; Description="Find out who is the RAM eater, just run it!"}
-        @{Parameter="    -Help"; Description="Print help info."}
-        @{Parameter="    -Version"; Description="Print version info."}
-    ) | ForEach-Object { New-Object PSObject | Add-Member -NotePropertyMembers $_ -PassThru } | Format-Table -HideTableHeaders
-
     if ($Help) {
-        Return $HelpInfo
+        $groupHelpInfo = @(
+            @{ Parameter = "ListMemoryUsage               "; Description = "Print memory usage statistics." }
+            @{ Parameter = "    -Name <String>"; Description = "A filter for processes to show, file extension can be omitted." }
+            @{ Parameter = "    -Exactly"; Description = "Use this parameter to match process name exactly." }
+            @{ Parameter = "    -Unit <String>"; Description = "Specify the unit of memory size, support KB, MB, GB, TB." }
+            @{ Parameter = "    -Accuracy <Int32>"; Description = "Specify decimal places to show, support integers from 0 to 15." }
+            @{ Parameter = "    -Sort <String>"; Description = "Sort processes by memory usage, support +, -, Ascending, Descending." }
+            @{ Parameter = "    -NoSum"; Description = "Sum info won't be generated with this parameter." }
+            @{ Parameter = "    -Export <String>"; Description = "Export results to csv file, file extension can be omitted." }
+            @{ Parameter = "    -Help"; Description = "Print help info." }
+            @{ Parameter = ""; Description = "" }
+            @{ Parameter = "WhoAteMyRAM                   "; Description = "Find out who is the RAM eater, just run it!" }
+            @{ Parameter = "    -Help"; Description = "Print help info." }
+            @{ Parameter = "    -Version"; Description = "Print version info." }
+        )
+        
+        $HelpInfo = ForEach ($lineHelpInfo in $groupHelpInfo) {
+            New-Object PSObject | Add-Member -NotePropertyMembers $lineHelpInfo -PassThru
+        }
+
+        Return $HelpInfo | Format-Table -HideTableHeaders
     }
 
     $Unit = $Unit.ToUpper()
 
     switch ($Unit) {
-        "K" {$Unit = "KB"; Break}
-        "M" {$Unit = "MB"; Break}
-        "G" {$Unit = "GB"; Break}
-        "T" {$Unit = "TB"; Break}
+        "K" { $Unit = "KB"; Break }
+        "M" { $Unit = "MB"; Break }
+        "G" { $Unit = "GB"; Break }
+        "T" { $Unit = "TB"; Break }
     }
 
     $SupportedUnit = @("KB", "MB", "GB", "TB")
@@ -93,10 +97,10 @@ function ListMemoryUsage {
     }
     else {
         $Accuracy = switch ($Unit) {
-            "KB" {0; Break}
-            "MB" {0; Break}
-            "GB" {2; Break}
-            "TB" {2; Break}
+            "KB" { 0; Break }
+            "MB" { 0; Break }
+            "GB" { 2; Break }
+            "TB" { 2; Break }
         }
     }
 
@@ -107,10 +111,10 @@ function ListMemoryUsage {
         }
 
         if ($Exactly) {
-            $ProcessList = $ProcessList | Where-Object {$_.Name -eq "$Name"}
+            $ProcessList = $ProcessList | Where-Object { "$Name" -eq $_.Name }
         }
         else {
-            $ProcessList = $ProcessList | Where-Object {$_.Name -match "$Name"}
+            $ProcessList = $ProcessList | Where-Object { $_.Name -match "$Name" }
         }
     }
 
@@ -145,10 +149,10 @@ function ListMemoryUsage {
             Return
         }
         $MemoryUsage = switch ($Sort) {
-            {@("+", "Ascending") -contains $_} {
+            { @("+", "Ascending") -contains $_ } {
                 $MemoryUsage | Sort-Object -Property "Memory Usage(*)"
             }
-            {@("-", "Descending") -contains $_} {
+            { @("-", "Descending") -contains $_ } {
                 $MemoryUsage | Sort-Object -Property "Memory Usage(*)" -Descending
             }
         }
