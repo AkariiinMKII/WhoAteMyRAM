@@ -63,7 +63,7 @@ function ListMemoryUsage {
             @{ Parameter = "    -Help"; Description = "Print help info." }
             @{ Parameter = "    -Version"; Description = "Print version info." }
         )
-        
+
         $HelpInfo = ForEach ($lineHelpInfo in $groupHelpInfo) {
             New-Object PSObject | Add-Member -NotePropertyMembers $lineHelpInfo -PassThru
         }
@@ -82,20 +82,17 @@ function ListMemoryUsage {
 
     $SupportedUnit = @("KB", "MB", "GB", "TB")
     if ($SupportedUnit -notcontains $Unit) {
-        $SupportedUnittoString = $SupportedUnit -join ", "
-        Write-Host "`nError: Invalid unit, please use $SupportedUnittoString." -ForegroundColor Red
-        Write-Host "`nRun 'ListMemoryUsage -Help' for more help info.`n"
+        $SupportedUnittoString = $SupportedUnit -join(", ")
+        Write-Host "Error: Invalid unit, please use $SupportedUnittoString.`nRun 'ListMemoryUsage -Help' for more help info." -ForegroundColor Red
         Return
     }
 
     if ($PSBoundParameters.ContainsKey('Accuracy')) {
         if (($Accuracy -lt 0) -or ($Accuracy -gt 15)){
-            Write-Host "`nError: Only support accuracy from 0 to 15." -ForegroundColor Red
-            Write-Host "`nRun 'ListMemoryUsage -Help' for more help info.`n"
+            Write-Host "Error: Only support accuracy from 0 to 15.`nRun 'ListMemoryUsage -Help' for more help info." -ForegroundColor Red
             Return
         }
-    }
-    else {
+    } else {
         $Accuracy = switch ($Unit) {
             "KB" { 0; Break }
             "MB" { 0; Break }
@@ -106,14 +103,11 @@ function ListMemoryUsage {
 
     $ProcessList = Get-Process | Group-Object -Property ProcessName
     if ($Name) {
-        if ($Name -match '\S+\.exe$') {
-            $Name = $Name -Replace '\.exe$', ''
-        }
+        $Name = $Name -replace("\.exe$", "")
 
         if ($Exactly) {
             $ProcessList = $ProcessList | Where-Object { "$Name" -eq $_.Name }
-        }
-        else {
+        } else {
             $ProcessList = $ProcessList | Where-Object { $_.Name -match "$Name" }
         }
     }
@@ -131,21 +125,19 @@ function ListMemoryUsage {
 
     if ($MemoryUsage.Count -eq 0) {
         if ($Exactly) {
-            Write-Host "`nError: Cannot find process matches `"$Name`" exactly." -ForegroundColor Red
+            Write-Host "Error: Cannot find process exactly matches `"$Name`"." -ForegroundColor Red
+        } else {
+            Write-Host "Error: Cannot find process matches `"$Name`"." -ForegroundColor Red
         }
-        else {
-            Write-Host "`nError: Cannot find process matches `"$Name`"." -ForegroundColor Red
-        }
-        Write-Host "`nRun 'ListMemoryUsage -Help' for more help info.`n"
+        Write-Host "Run 'ListMemoryUsage -Help' for more help info." -ForegroundColor Red
         Return
     }
 
     if ($Sort) {
         $SupportedSort = @("+", "-", "Ascending", "Descending")
         if ($SupportedSort -notcontains $Sort) {
-            $SupportedSorttoString = $SupportedSort -join ", "
-            Write-Host "`nError: Invalid sort, please use $SupportedSorttoString." -ForegroundColor Red
-            Write-Host "`nRun 'ListMemoryUsage -Help' for more help info.`n"
+            $SupportedSorttoString = $SupportedSort -join(", ")
+            Write-Host "Error: Invalid sorting method, please use $SupportedSorttoString.`nRun 'ListMemoryUsage -Help' for more help info." -ForegroundColor Red
             Return
         }
         $MemoryUsage = switch ($Sort) {
@@ -177,12 +169,13 @@ function ListMemoryUsage {
     }
 
     if ($Export) {
-        if (-not($Export -match '\S+\.csv$')) {
-            $Export = $Export + ".csv"
+        $ExportFile = (($Export -replace("\.csv$", "")), "csv") -join(".")
+        $MemoryUsage | Export-Csv -Path "$ExportFile" -Delimiter "," -NoTypeInformation
+
+        if($?) {
+            Write-Host "Exported to `"$ExportFile`" successfully." -ForegroundColor Green
         }
-        $MemoryUsage | Export-Csv -Path "$Export" -Delimiter "," -NoTypeInformation
-    }
-    else {
+    } else {
         $MemoryUsage
     }
 }
@@ -217,10 +210,14 @@ function WhoAteMyRAM {
     }
 
     $RAMEaterInfo = (ListMemoryUsage -Unit GB -Sort Descending -NoSum)[0]
-    $RAMEater = $RAMEaterInfo.'Process Name'
-    $RAMAte = $RAMEaterInfo.'Memory Usage(GB)'
+    $RAMEater = ($RAMEaterInfo.'Process Name', ".exe") -join("")
+    $RAMAte = ($RAMEaterInfo.'Memory Usage(GB)', "GB") -join("")
 
-    Write-Host "`nIt's $RAMEater, who ate $RAMAte GB of RAM!`n"
+    Write-Host "`nIt's " -NoNewline
+    Write-Host $RAMEater -ForegroundColor Green -NoNewline
+    Write-Host ", who ate " -NoNewline
+    Write-Host $RAMAte -ForegroundColor Green -NoNewline
+    Write-Host " of RAM!`n"
 }
 
 Set-Alias LMU ListMemoryUsage
