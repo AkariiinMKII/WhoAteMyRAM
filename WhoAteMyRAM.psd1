@@ -9,31 +9,31 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    RootModule = 'WhoAteMyRAM.psm1'
+    RootModule        = 'WhoAteMyRAM.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.0.20'
+    ModuleVersion     = '1.0.20'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
 
     # ID used to uniquely identify this module
-    GUID = 'd7c2aa61-c04c-4cf2-a2bf-58996f8c59b7'
+    GUID              = 'd7c2aa61-c04c-4cf2-a2bf-58996f8c59b7'
 
     # Author of this module
-    Author = 'AkariiinMKII'
+    Author            = 'AkariiinMKII'
 
     # Company or vendor of this module
-    CompanyName = 'Unknown'
+    CompanyName       = 'Unknown'
 
     # Copyright statement for this module
-    Copyright = '(c) 2022 AkariiinMKII. All rights reserved.'
+    Copyright         = '(c) 2022 AkariiinMKII. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description = 'A command-line tool for memory usage statistics.'
+    Description       = 'A command-line tool for memory usage statistics.'
 
     # Minimum version of the Windows PowerShell engine required by this module
-    PowerShellVersion = '5.0'
+    PowerShellVersion = '5.1'
 
     # Name of the Windows PowerShell host required by this module
     # PowerShellHostName = ''
@@ -72,13 +72,13 @@
     FunctionsToExport = @("ListMemoryUsage", "WhoAteMyRAM")
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport = @()
+    CmdletsToExport   = @()
 
     # Variables to export from this module
     VariablesToExport = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport = @("LMU", "WAMR")
+    AliasesToExport   = @("LMU", "WAMR")
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -87,10 +87,10 @@
     # ModuleList = @()
 
     # List of all files packaged with this module
-    FileList = @("WhoAteMyRAM.psm1")
+    FileList          = @("WhoAteMyRAM.psm1")
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
-    PrivateData = @{
+    PrivateData       = @{
 
         PSData = @{
 
@@ -98,7 +98,7 @@
             # Tags = @()
 
             # A URL to the license for this module.
-            LicenseUri = 'https://opensource.org/licenses/MIT'
+            LicenseUri = 'https://github.com/AkariiinMKII/WhoAteMyRAM/blob/main/LICENSE'
 
             # A URL to the main website for this project.
             ProjectUri = 'https://github.com/AkariiinMKII/WhoAteMyRAM'
@@ -114,7 +114,7 @@
     } # End of PrivateData hashtable
 
     # HelpInfo URI of this module
-    # HelpInfoURI = ''
+    HelpInfoURI       = 'https://github.com/AkariiinMKII/WhoAteMyRAM/blob/main/README.md'
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''
