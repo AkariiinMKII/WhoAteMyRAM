@@ -39,11 +39,11 @@ _Print or export memory usage statistics._
 |Parameters|Type|Mandatory|Descriptions|
 |----|:----:|:----:|----|
 |`Name`|String|&cross;|A filter for processes to show, file extension can be omitted.|
-|`Exactly`|switch|&cross;|Use this parameter to match process name exactly.|
+|`Exactly`|Switch|&cross;|Use this parameter to match process name exactly.|
 |`Unit`|String|&cross;|Specify the unit of memory size, support `KB`, `MB`, `GB`, `TB`.|
 |`Accuracy`|Int32|&cross;|Specify decimal places to show, support integers from `0` to `15`.|
 |`Sort`|String|&cross;|Sort processes by memory usage, support `+`, `-`, `Ascending`, `Descending`.|
-|`NoSum`|switch|&cross;|Sum info won't be generated with this parameter.|
+|`NoSum`|Switch|&cross;|Sum info won't be generated with this parameter.|
 |`Export`|String|&cross;|Export results to csv file, file extension can be omitted.|
 |`Help`|Switch|&cross;|Print help info.|
 
@@ -69,5 +69,5 @@ _Find out who is the RAM eater, just run it!_
 ```Powershell
 WhoAteMyRAM
 
-It's chrome, who ate 19.19 GB of RAM!
+It's chrome, who ate 1145.14 GB of RAM!
 ```
